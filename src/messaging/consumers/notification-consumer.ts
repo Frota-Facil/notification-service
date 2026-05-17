@@ -32,10 +32,70 @@ export async function startNotificationConsumer() {
       const emailSubject = subject ?? "Atualização de solicitação";
 
       for (const email of emailList) {
-        const text =
-          typeof payload === "string"
-            ? payload
-            : `Olá, ${payload.nome ?? ""},\n\n${payload.message ?? ""}`;
+        const status = event?.data?.status;
+
+        let text: string;
+
+        if (typeof payload === "string") {
+          text = payload;
+        } else {
+          const nome = event?.data?.userName ?? payload?.nome ?? "";
+          const message = event?.message ?? payload?.message ?? "";
+
+          const vehicle = event?.data?.vehicleName ?? "";
+          const plate = event?.data?.vehiclePlate ?? "";
+          const reason = event?.data?.reason ?? "";
+          const startsAt = event?.data?.startsAt
+            ? new Date(event.data.startsAt).toLocaleString("pt-BR")
+            : "";
+          const endsAt = event?.data?.endsAt
+            ? new Date(event.data.endsAt).toLocaleString("pt-BR")
+            : "";
+
+          const details = `
+        🚗 Veículo: ${vehicle}
+        🔖 Placa: ${plate}
+        📄 Motivo: ${reason}
+        📅 Início: ${startsAt}
+        📅 Fim: ${endsAt}
+        `;
+
+          if (status === "approved") {
+            text = `Olá, ${nome}!
+
+        ✅ Sua solicitação foi APROVADA com sucesso.
+
+        ${details}
+
+        📌 Detalhes adicionais:
+        ${message}
+
+        Boa viagem! 🚀`;
+          } else if (status === "rejected") {
+            text = `Olá, ${nome}!
+
+        ❌ Sua solicitação foi RECUSADA.
+
+        ${details}
+
+        📌 Motivo / Observação:
+        ${message}
+
+        Caso tenha dúvidas, entre em contato com o administrador.`;
+          } else {
+            // pending ou fallback
+            text = `Olá, ${nome}!
+
+        📌 Sua solicitação está em análise.
+
+        ${details}
+
+        📌 Mensagem:
+        ${message}
+
+        Você será notificado assim que houver uma atualização.`;
+          }
+        }
 
         await sendEmail(email, emailSubject, text);
       }
