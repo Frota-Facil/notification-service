@@ -84,7 +84,7 @@ export async function startNotificationConsumer() {
         Caso tenha dúvidas, entre em contato com o administrador.`;
           } else {
             // pending ou fallback
-            text = `Olá, ${name}!
+            text = `Olá, Administrador!
 
         📌 Pedido de solicitação criado.
 
