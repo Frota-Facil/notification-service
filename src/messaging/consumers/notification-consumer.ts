@@ -39,7 +39,7 @@ export async function startNotificationConsumer() {
         if (typeof payload === "string") {
           text = payload;
         } else {
-          const nome = event?.data?.userName ?? payload?.nome ?? "";
+          const name = event?.data?.userName ?? payload?.name ?? "";
           const message = event?.message ?? payload?.message ?? "";
 
           const vehicle = event?.data?.vehicleName ?? "";
@@ -61,7 +61,7 @@ export async function startNotificationConsumer() {
         `;
 
           if (status === "approved") {
-            text = `Olá, ${nome}!
+            text = `Olá, ${name}!
 
         ✅ Sua solicitação foi APROVADA com sucesso.
 
@@ -72,7 +72,7 @@ export async function startNotificationConsumer() {
 
         Boa viagem! 🚀`;
           } else if (status === "rejected") {
-            text = `Olá, ${nome}!
+            text = `Olá, ${name}!
 
         ❌ Sua solicitação foi RECUSADA.
 
@@ -84,16 +84,13 @@ export async function startNotificationConsumer() {
         Caso tenha dúvidas, entre em contato com o administrador.`;
           } else {
             // pending ou fallback
-            text = `Olá, ${nome}!
+            text = `Olá, ${name}!
 
-        📌 Sua solicitação está em análise.
+        📌 Pedido de solicitação criado.
 
         ${details}
 
-        📌 Mensagem:
-        ${message}
-
-        Você será notificado assim que houver uma atualização.`;
+        Agora você pode aprovar ou negar essa solicitação de veículo no seu dashboard!`;
           }
         }
 
