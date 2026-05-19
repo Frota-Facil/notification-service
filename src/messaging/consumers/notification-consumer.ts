@@ -40,7 +40,6 @@ export async function startNotificationConsumer() {
           text = payload;
         } else {
           const name = event?.data?.userName ?? payload?.name ?? "";
-          const message = event?.message ?? payload?.message ?? "";
 
           const vehicle = event?.data?.vehicleName ?? "";
           const plate = event?.data?.vehiclePlate ?? "";
