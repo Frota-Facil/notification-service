@@ -67,9 +67,6 @@ export async function startNotificationConsumer() {
 
         ${details}
 
-        📌 Detalhes adicionais:
-        ${message}
-
         Boa viagem! 🚀`;
           } else if (status === "rejected") {
             text = `Olá, ${name}!
@@ -77,9 +74,6 @@ export async function startNotificationConsumer() {
         ❌ Sua solicitação foi RECUSADA.
 
         ${details}
-
-        📌 Motivo / Observação:
-        ${message}
 
         Caso tenha dúvidas, entre em contato com o administrador.`;
           } else {
