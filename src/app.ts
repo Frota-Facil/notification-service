@@ -1,5 +1,8 @@
 import { fastify } from "fastify";
+import { collectDefaultMetrics, register } from "prom-client";
 import { logger } from "@/globals/logger";
+
+collectDefaultMetrics();
 
 export function buildApp() {
     const app = fastify({
@@ -15,6 +18,11 @@ export function buildApp() {
 
   app.get("/health", async () => {
     return { status: "ok" };
+  });
+
+  app.get("/metrics", async (_request, reply) => {
+    reply.header("Content-Type", register.contentType);
+    return register.metrics();
   });
 
   return app;

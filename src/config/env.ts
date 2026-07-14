@@ -6,6 +6,8 @@ const envSchema = z.object({
 	RABBITMQ_AMQP_PORT: z.coerce.number().default(5672),
 	RABBITMQ_USER: z.string().min(1),
 	RABBITMQ_PASS: z.string().min(1),
+	SMTP_HOST: z.string().default("localhost"),
+	SMTP_PORT: z.coerce.number().default(1025),
 });
 
 export const env = envSchema.parse(process.env);

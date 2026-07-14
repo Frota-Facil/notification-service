@@ -1,34 +1,50 @@
 services:
+  notification-service:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      RABBITMQ_AMQP_HOST: host.docker.internal
+      SMTP_HOST: mailhog
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "3331:3331"
+    depends_on:
+      mailhog:
+        condition: service_started
+
   mailhog:
     image: mailhog/mailhog
     ports:
       - "8025:8025" # UI web
       - "1025:1025" # SMTP
 
-  rabbitmq:
-    image: rabbitmq:3.13-management
-    container_name: sif-notification-rabbitmq
-    restart: unless-stopped
+#   rabbitmq:
+#     image: rabbitmq:3.13-management
+#     container_name: sif-notification-rabbitmq
+#     restart: unless-stopped
 
-    env_file:
-      - .env
+#     env_file:
+#       - .env
 
-    ports:
-      - "5672:5672"     # AMQP
-      - "15672:15672"   # Management UI
+#     ports:
+#       - "5672:5672"     # AMQP
+#       - "15672:15672"   # Management UI
 
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
+#     environment:
+#       RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+#       RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASS}
 
-    volumes:
-      - rabbitmq_data:/var/lib/rabbitmq
+#     volumes:
+#       - rabbitmq_data:/var/lib/rabbitmq
 
-    healthcheck:
-      test: ["CMD", "rabbitmq-diagnostics", "ping"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
+#     healthcheck:
+#       test: ["CMD", "rabbitmq-diagnostics", "ping"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
 
-volumes:
-  rabbitmq_data:
+# volumes:
+#   rabbitmq_data:
